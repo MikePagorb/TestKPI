@@ -12,22 +12,14 @@ namespace TestKPI
     {
         static void Main(string[] args)
         {
-            ConnectionToDB connect = new ConnectionToDB();
-            connect.SetConnection();
-            try
-            {
-                connect.ConnectionDB.Open();
-                Console.WriteLine("Connection open");
-            }
-            catch (SqlException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                connect.ConnectionDB.Close();
-                Console.WriteLine("Connection close");
-            }
+
+            ConnectionToDB connection = new ConnectionToDB();
+            Selections selections = new Selections();
+            CreatorConferences creatorConferences = new CreatorConferences();
+
+            ConferenceFacade con = new ConferenceFacade(connection, selections, creatorConferences);
+            User user = new User();
+            user.CreateSelections(con);
         }
     }
 }
