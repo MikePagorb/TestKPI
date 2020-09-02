@@ -12,9 +12,10 @@ namespace TestKPI
     {
         public void CreateConferencesNextYear(SqlConnection connection)
         {
-            String sqlCommand = "Select con.NameOfConf, con.Topic, Year(t.TermOfCarryingOut) as 'year', " +
-                "MONTH(t.TermOfCarryingOut) as 'month', DAY(t.TermOfCarryingOut) as 'day' from Conferences con " +
-                "Left join Terms t on con.ConfId = t.ConfId";
+            String sqlCommand = @"Select con.NameOfConf, con.Topic, Year(t.TermOfCarryingOut) as 'year', 
+                MONTH(t.TermOfCarryingOut) as 'month', DAY(t.TermOfCarryingOut) as 'day' from Conferences con 
+                Left join Terms t on con.ConfId = t.ConfId";
+
             SqlCommand command = new SqlCommand(sqlCommand, connection);
             SqlDataReader reader = command.ExecuteReader();
             if (reader.HasRows)

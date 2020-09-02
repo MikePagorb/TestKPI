@@ -16,7 +16,8 @@ namespace TestKPI
                                 Left join Terms t on con.ConfId = t.ConfId Left Join ConfCost c on con.ConfId = c.ConfId 
                                 where Month(t.TermOfCarryingOut)= 9
                                 or Month(t.TermOfCarryingOut)= 10
-                                or Month(t.TermOfCarryingOut)= 11; ";
+                                or Month(t.TermOfCarryingOut)= 11;";
+            
             SqlCommand command = new SqlCommand(sqlCommand, connection);
             SqlDataReader reader = command.ExecuteReader();
             if(reader.HasRows)
@@ -35,8 +36,11 @@ namespace TestKPI
         public void TakeConferencesOrganizer(SqlConnection connection)
         {
             Console.WriteLine("\nPlease enter unit: ");
-            String sqlCommand = "Select org.Organizer, con.NameOfConf, con.Topic, c.Cost from Organizers org Right join Conferences con on org.OrganizerId = con.OrganizerId Left Join ConfCost c on con.ConfId = c.ConfId where org.Organizer = '" + Console.ReadLine()+"'";
+            string organizer = Console.ReadLine();
+            String sqlCommand = "Select org.Organizer, con.NameOfConf, con.Topic, c.Cost from Organizers org Right join Conferences con on org.OrganizerId = con.OrganizerId Left Join ConfCost c on con.ConfId = c.ConfId where org.Organizer = @Organizer";
             SqlCommand command = new SqlCommand(sqlCommand, connection);
+            SqlParameter OrganizerParam = new SqlParameter("@Organizer", organizer);
+            command.Parameters.Add(OrganizerParam);
             SqlDataReader reader = command.ExecuteReader();
             if (reader.HasRows)
             {
@@ -53,15 +57,21 @@ namespace TestKPI
         public void ConferenceYearPlaceOrganizer(SqlConnection connection)
         {
             Console.WriteLine("Please, enter Place and Organizer: ");
-            String sqlCommand = "Select con.NameOfConf, con.Topic, t.TermOfCarryingOut, p.Place, org.Organizer, c.Cost from Conferences con" +
-                                    " Right join Terms t on con.ConfId = t.ConfId" +
-                                    " Join Organizers org on con.OrganizerId = org.OrganizerId" +
-                                    " Join Places p on org.OrganizerId = p.OrganizerId" +
-                                    " Left Join ConfCost c on con.ConfId = c.ConfId" +
-                                    " where YEAR(t.TermOfCarryingOut) = 2020" +
-                                    " and p.Place = '"+Console.ReadLine()+"'" +
-                                    " and org.Organizer = '" + Console.ReadLine() + "';";
+            string place = Console.ReadLine();
+            string organizer = Console.ReadLine();
+            String sqlCommand = @"Select con.NameOfConf, con.Topic, t.TermOfCarryingOut, p.Place, org.Organizer, c.Cost from Conferences con
+                                     Right join Terms t on con.ConfId = t.ConfId
+                                     Join Organizers org on con.OrganizerId = org.OrganizerId
+                                     Join Places p on org.OrganizerId = p.OrganizerId
+                                     Left Join ConfCost c on con.ConfId = c.ConfId
+                                     where YEAR(t.TermOfCarryingOut) = 2020
+                                     and p.Place = @place 
+                                     and org.Organizer = @Organizer;";
             SqlCommand command = new SqlCommand(sqlCommand, connection);
+            SqlParameter placeParam = new SqlParameter("@place", place);
+            command.Parameters.Add(placeParam);
+            SqlParameter OrganizerParam = new SqlParameter("@Organizer", organizer);
+            command.Parameters.Add(OrganizerParam);
             SqlDataReader reader = command.ExecuteReader();
             if (reader.HasRows)
             {
